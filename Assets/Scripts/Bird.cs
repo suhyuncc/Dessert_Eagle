@@ -48,6 +48,10 @@ public class Bird : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("¾Æ¾ß!!");
+        if (collision.transform.CompareTag("Bug"))
+        {
+            Debug.Log("³È³È!!");
+        }
+        
     }
 }

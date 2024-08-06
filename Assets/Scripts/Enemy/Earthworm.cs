@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class Earthworm : PooledObject
 {
-    private float moveSpeed = 5.0f;
-    
+    [SerializeField]
+    private float speed;
+
     void Update()
     {
-        if (this.transform.position.x < -10)
+        if (this.transform.position.x < -80)
         {
             ReleaseToPool();
         }
-        
-        this.transform.Translate(Vector3.left * this.moveSpeed * Time.deltaTime);
+
+        this.transform.localPosition += Vector3.left * speed;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.CompareTag("Bird"))
+        {
+            ReleaseToPool();
+        }
     }
 }
