@@ -19,5 +19,10 @@ public class Ground : MonoBehaviour
     void Update()
     {
         transform.localPosition += Vector3.left * speed;
+
+        if(transform.position.x < -153)
+        {
+            transform.position = new Vector3(306,0,0);
+        }
     }
 }

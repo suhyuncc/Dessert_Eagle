@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Bird : MonoBehaviour
 {
-    private Rigidbody2D rigidbody2D;
+    [SerializeField]
+    private float _speed;
+    private float _direction;
     private Transform transform;
 
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody2D = this.GetComponent<Rigidbody2D>();
         transform = this.GetComponent<Transform>();
+
+        _direction = _speed * - 1;
     }
 
     // Update is called once per frame
@@ -20,29 +24,30 @@ public class Bird : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            _change_gravity();
             _change_head();
         }
 
-        
-    }
-
-    private void _change_gravity()
-    {
-        rigidbody2D.gravityScale *= -1;
+        transform.localPosition += Vector3.up * _direction;
     }
 
     private void _change_head()
     {
-        Debug.Log(transform.eulerAngles.z);
-        switch (transform.eulerAngles.z)
+
+        if(transform.rotation.z > 0)
         {
-            case 300:
-                transform.Rotate(0, 0, -60);
-                break;
-            case 240:
-                transform.Rotate(0, 0, 60);
-                break;
+            transform.Rotate(0, 0, -50);
         }
+        else
+        {
+            transform.Rotate(0, 0, 50);
+        }
+
+
+        _direction = _direction * -1;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("¾Æ¾ß!!");
     }
 }
