@@ -2769,10 +2769,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameoverCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 2597570603758664490, guid: 57a7c20978a3c2142afeb0fac45a40f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3395264601084053640, guid: 57a7c20978a3c2142afeb0fac45a40f7, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 5449918132392877846, guid: 57a7c20978a3c2142afeb0fac45a40f7, type: 3}
+      propertyPath: _isVertical
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5449918132392877846, guid: 57a7c20978a3c2142afeb0fac45a40f7, type: 3}
+      propertyPath: factorScale
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6677261023330756459, guid: 57a7c20978a3c2142afeb0fac45a40f7, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3692,6 +3704,7 @@ MonoBehaviour:
   gameoverScore: {fileID: 747892198}
   _hpSlider: {fileID: 1600066073}
   _pointTXT: {fileID: 1962975751}
+  _audioSource: {fileID: 1290193603}
   _eagle: {fileID: 1146815974}
   _effect: {fileID: 392160617}
   _pop: {fileID: 32355545}

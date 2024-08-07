@@ -7,7 +7,7 @@ public class SpawnPoint : MonoBehaviour
     [SerializeField]
     private int _spawnRate;
     private bool _spawncheck;
-    private string[] monsterList = { "Earthworm", "EarthwormMother", "EarthwormFather" };
+    private string _monsterName;
 
     void Update()
     {
@@ -15,7 +15,23 @@ public class SpawnPoint : MonoBehaviour
 
         if (_spawncheck)
         {
-            GameObject enemyGo = ObjectPoolManager.ObjectPoolManagerInstance.GetPooledGameObject(monsterList[Random.Range(0, 3)]);
+            switch (Random.Range(0, 100))
+            {
+                case > 98:
+                    _monsterName = "Rainbow";
+                    break;
+                case > 68:
+                    _monsterName = "EarthwormFather";
+                    break;
+                case > 38:
+                    _monsterName = "EarthwormMother";
+                    break;
+                default:
+                    _monsterName = "Earthworm";
+                    break;
+            }
+
+            GameObject enemyGo = ObjectPoolManager.ObjectPoolManagerInstance.GetPooledGameObject(_monsterName);
             enemyGo.transform.position = this.transform.position;
             _spawncheck = false;
         }

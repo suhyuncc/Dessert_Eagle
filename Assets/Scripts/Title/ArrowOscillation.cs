@@ -4,35 +4,42 @@ using UnityEngine;
 
 public class ArrowOscillation : MonoBehaviour
 {
-    private Transform arrowTransform;
-    private float factorScale = 0.01f;
+    [SerializeField]
+    private float factorScale;
+    [SerializeField]
+    private bool _isVertical;
     
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine("Oscillation");;
+        StartCoroutine("Oscillation");
     }
     
     private IEnumerator Oscillation()
     {
-        float factorScale = 0.05f;
-        float moveSum = 0;
-        bool isExpanding = false;
 
         while (true)
         {
-            if (moveSum < 0) factorScale *= -1;
-            if (moveSum > 2) factorScale *= -1;
+            factorScale *= -1;
             
-            this.transform.position = new Vector3(this.transform.position.x - factorScale
+            if(_isVertical)
+            {
+                this.transform.position = new Vector3(this.transform.position.x 
+                , this.transform.position.y - factorScale
+                , this.transform.position.z);
+            }
+            else
+            {
+                this.transform.position = new Vector3(this.transform.position.x - factorScale
                 , this.transform.position.y
                 , this.transform.position.z);
+            }
+            
             // this.transform.localScale = new Vector3(this.transform.localScale.x - factorScale
             //     , this.transform.localScale.y
             //     , this.transform.localScale.z);
-            moveSum -= this.factorScale;
                 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSecondsRealtime(0.5f);
         }
     }
 }

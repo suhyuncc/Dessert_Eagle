@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI _pointTXT;
     [SerializeField]
+    private AudioSource _audioSource;
+    [SerializeField]
     private GameObject _eagle;
     [SerializeField]
     private GameObject _effect;
@@ -103,7 +105,8 @@ public class GameManager : MonoBehaviour
         {
             endStateRotation = _eagle.transform.localRotation;
             OnGameOver();
-            // _gameover.SetActive(true);
+            _audioSource.Pause();
+            _eagle.GetComponent<AudioSource>().Pause();
         }
 
         if (phaseGameOver == 1 && _eagle.transform.localPosition.y < 15)
@@ -121,11 +124,11 @@ public class GameManager : MonoBehaviour
 
         if (phaseGameOver == 2 && _eagle.transform.localPosition.y > -5)
         {
-            gameoverScore.text = _point.ToString();
+            gameoverScore.text = $"{(int)_point} KM";
 
             DamageScreen.gameObject.SetActive(false);
             GameoverCanvas.gameObject.SetActive(true);
-            GameoverScreen.color = Color.gray;
+            GameoverScreen.color = new Color(0.5f,0.5f,0.5f,0.5f);
 
             _eagle.GetComponent<Animator>().updateMode = AnimatorUpdateMode.UnscaledTime;
             _eagle.GetComponent<Animator>().SetBool("isDead", true);
