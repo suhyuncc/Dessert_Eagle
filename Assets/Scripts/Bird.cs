@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class Bird : MonoBehaviour
 {
@@ -19,9 +23,14 @@ public class Bird : MonoBehaviour
     private Collider2D _upCollider;
     [SerializeField]
     private Collider2D _downCollider;
+    [SerializeField] 
+    private Collider2D _deadCollider;
     private float _direction;
     private Transform transform;
     private float _timer;
+    private float startPosX;
+    private float startPosY;
+    private bool isBeingHeld = false;
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +61,25 @@ public class Bird : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            _change_head();
+            if (GameManager.instance.isPlayerControllable)
+            {
+                _change_head();
+            }
+        }
+        
+        if (isBeingHeld)
+        {
+            if (GameManager.instance.isPlayerControllable && GameManager.instance.phaseGameOver == 3)
+            {
+                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                this.transform.position = new Vector2(startPosX, mousePos.y - startPosY);
+
+                if (this.transform.position.y > 15)
+                {
+                    this.transform.position = new Vector3(transform.position.x, 15, 0);
+                    GameManager.instance.ResetGame();
+                }
+            }
         }
 
         transform.localPosition += Vector3.up * _direction * _speed * Time.deltaTime;
@@ -65,6 +92,7 @@ public class Bird : MonoBehaviour
             transform.Rotate(0, 0, -2 * _angle);
             _downCollider.enabled = true;
             _upCollider.enabled = false;
+            _deadCollider.enabled = false;
             Iscrictic = false;
             _timer = 0;
         }
@@ -73,6 +101,7 @@ public class Bird : MonoBehaviour
             transform.Rotate(0, 0, 2 * _angle);
             _downCollider.enabled = false;
             _upCollider.enabled = true;
+            _deadCollider.enabled = false;
             _timer = 0;
         }
 
@@ -92,8 +121,6 @@ public class Bird : MonoBehaviour
                 GameManager.instance.GetDamage(10);
                 break;
         }
-
-
     }
 
     public void Reposition(float angle)
@@ -111,5 +138,30 @@ public class Bird : MonoBehaviour
         }
         
 
+    }
+
+    private void OnMouseDown() 
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            startPosX = this.transform.position.x;
+            startPosY = mousePos.y - this.transform.position.y;
+
+            isBeingHeld = true;
+        }
+    }
+
+    private void OnMouseUp() 
+    {
+        isBeingHeld = false;
+    }
+
+    public void OnGameOver()
+    {
+        _downCollider.enabled = false;
+        _upCollider.enabled = false;
+        _deadCollider.enabled = true;
     }
 }

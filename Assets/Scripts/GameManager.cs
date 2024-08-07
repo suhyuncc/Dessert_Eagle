@@ -2,14 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public int phaseGameOver = 0;
+    public bool isPlayerControllable = true;
+
+    private bool isResetComplete = false;
+    private Quaternion endStateRotation;
+
     [SerializeField]
     private Image DamageScreen;
+    [SerializeField]
+    private Image GameoverScreen;
+    [SerializeField]
+    private Canvas GameoverCanvas;
+    [SerializeField]
+    private Canvas UICanvas;
+    [SerializeField]
+    private TextMeshProUGUI gameoverScore;
     [SerializeField]
     private Slider _hpSlider;
     [SerializeField]
@@ -67,12 +82,12 @@ public class GameManager : MonoBehaviour
 
         _pointTXT.text = $"{(int)_point} KM";
 
-        if(_point > 25 && _currentStage == 1)
+        if (_point > 25 && _currentStage == 1)
         {
             _currentStage++;
             StageSetting(_currentStage);
         }
-        else if(_point > 125 && _currentStage == 2)
+        else if (_point > 125 && _currentStage == 2)
         {
             _currentStage++;
             StageSetting(_currentStage);
@@ -83,10 +98,51 @@ public class GameManager : MonoBehaviour
             StageSetting(_currentStage);
         }
 
-        //°ÔÀÓÁ¾·á½Ã °ÔÀÓ¿À¹ö ÆÐ³Î ÄÑ±â
-        if(_hpSlider.value == 0)
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½ ï¿½Ñ±ï¿½
+        if (_hpSlider.value == 0 && phaseGameOver == 0)
         {
-            _gameover.SetActive(true);
+            endStateRotation = _eagle.transform.localRotation;
+            OnGameOver();
+            // _gameover.SetActive(true);
+        }
+
+        if (phaseGameOver == 1 && _eagle.transform.localPosition.y < 15)
+        {
+            UICanvas.gameObject.SetActive(false);
+
+            _eagle.transform.localPosition +=
+                (new Vector3(_eagle.transform.localPosition.x, 20, 0) - _eagle.transform.position).normalized * 20.0f *
+                Time.unscaledDeltaTime;
+            if (_eagle.transform.localPosition.y > 12.5)
+            {
+                phaseGameOver = 2;
+            }
+        }
+
+        if (phaseGameOver == 2 && _eagle.transform.localPosition.y > -5)
+        {
+            gameoverScore.text = _point.ToString();
+
+            DamageScreen.gameObject.SetActive(false);
+            GameoverCanvas.gameObject.SetActive(true);
+            GameoverScreen.color = Color.gray;
+
+            _eagle.GetComponent<Animator>().updateMode = AnimatorUpdateMode.UnscaledTime;
+            _eagle.GetComponent<Animator>().SetBool("isDead", true);
+            _eagle.transform.rotation = Quaternion.identity;
+            _eagle.transform.localPosition += Vector3.down * 20.0f * Time.unscaledDeltaTime;
+
+            if (_eagle.transform.localPosition.y < -4.9)
+            {
+                isPlayerControllable = true;
+                _eagle.GetComponent<Bird>().OnGameOver();
+                phaseGameOver = 3;
+            }
+        }
+
+        if (isResetComplete)
+        {
+            RestartGame();
         }
     }
 
@@ -108,7 +164,7 @@ public class GameManager : MonoBehaviour
         if (_eagle.GetComponent<Bird>().Iscrictic)
         {
             _hpSlider.value += 2* hp;
-            Debug.Log("Å©¸®Æ¼ÄÃ!!");
+            Debug.Log("Å©ï¿½ï¿½Æ¼ï¿½ï¿½!!");
             _eagle.GetComponent<Bird>().Iscrictic = false;
         }
         else
@@ -149,6 +205,21 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
     }
+    
+    private IEnumerator GameoverAlphaAnimation()
+    {
+        Color color = GameoverScreen.color;
+        color.a = 0.0f;
+        GameoverScreen.color = color;
+
+        while (color.a <= 0.7f)
+        {
+            color.a += Time.unscaledDeltaTime / 2;
+            DamageScreen.color = color;
+
+            yield return null;
+        }
+    }
 
     private void StageSetting(int stage)
     {
@@ -161,5 +232,70 @@ public class GameManager : MonoBehaviour
 
         _eagle.GetComponent<Bird>().Reposition(Eagle_angle);
         
+    }
+
+    private void OnGameOver()
+    {
+        isResetComplete = false;
+        isPlayerControllable = false;
+        phaseGameOver = 1;
+        Time.timeScale = 0.0f;
+
+        GameObject[] projectileList = GameObject.FindGameObjectsWithTag("Projectile");
+        foreach (var projectile in projectileList)
+        {
+            Destroy(projectile);
+        }
+        
+        StopCoroutine("GameoverAlphaAnimation");
+        StartCoroutine("GameoverAlphaAnimation");
+    }
+
+    public void ResetGame()
+    {
+        isPlayerControllable = false;
+        phaseGameOver = 0;
+        
+        _eagle.GetComponent<Animator>().updateMode = AnimatorUpdateMode.UnscaledTime;
+        _eagle.GetComponent<Animator>().SetBool("isDead", false);
+
+        _point = 0.0f;
+        _hpSlider.value = 100;
+
+        // _eagle.transform.localRotation = endStateRotation;
+
+        StartCoroutine("WaitForMotion");
+        
+        Debug.Log("ê²Œìž„ ë¦¬ì…‹ ì™„ë£Œ.");
+    }
+
+    private void RestartGame()
+    {
+        //DamageScreen.gameObject.SetActive(true);
+        //GameoverCanvas.gameObject.SetActive(false);
+
+        isResetComplete = false;
+
+        Time.timeScale = 1.0f;
+        
+        Debug.Log("ê²Œìž„ ìž¬ì‹œìž‘.");
+
+        StartCoroutine("LoadingScene");
+    }
+    
+    private IEnumerator WaitForMotion()
+    {
+        yield return new WaitForSecondsRealtime(2.0f);
+        isResetComplete = true;
+    }
+    
+    IEnumerator LoadingScene()
+    {
+        AsyncOperation loading = SceneManager.LoadSceneAsync("Bird");
+
+        while (!loading.isDone)
+        {
+            yield return null;
+        }
     }
 }

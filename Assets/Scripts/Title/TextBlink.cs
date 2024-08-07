@@ -10,9 +10,9 @@ public class TextBlink : MonoBehaviour
     private float timeElapsed;
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        timeElapsed += Time.fixedDeltaTime;
+        timeElapsed += Time.fixedUnscaledDeltaTime;
 
         if (timeElapsed > blinkTime)
         {
