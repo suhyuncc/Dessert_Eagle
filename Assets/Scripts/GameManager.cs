@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using EasyTransition;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     public int phaseGameOver = 0;
     public bool isPlayerControllable = true;
+    public TransitionSettings transition;
 
     private bool isResetComplete = false;
     private Quaternion endStateRotation;
@@ -23,6 +25,8 @@ public class GameManager : MonoBehaviour
     private Canvas GameoverCanvas;
     [SerializeField]
     private Canvas UICanvas;
+    [SerializeField]
+    private Image RetryBubble;
     [SerializeField]
     private TextMeshProUGUI gameoverScore;
     [SerializeField]
@@ -258,6 +262,7 @@ public class GameManager : MonoBehaviour
     {
         isPlayerControllable = false;
         phaseGameOver = 0;
+        RetryBubble.gameObject.SetActive(false);
         
         _eagle.GetComponent<Animator>().updateMode = AnimatorUpdateMode.UnscaledTime;
         _eagle.GetComponent<Animator>().SetBool("isDead", false);
@@ -300,5 +305,11 @@ public class GameManager : MonoBehaviour
         {
             yield return null;
         }
+    }
+
+    public void OnClickMainMenuButton()
+    {
+        Time.timeScale = 1.0f;
+        TransitionManager.Instance().Transition("Title", transition, 0);
     }
 }
