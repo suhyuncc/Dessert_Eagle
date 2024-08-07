@@ -27,7 +27,11 @@ public class Earthworm : PooledObject
         {
             if (collision.gameObject.GetComponent<Bird>().Iscrictic)
             {
-                GameManager.instance.PopEffect(transform.localPosition);
+                GameManager.instance.Effect(transform.localPosition);
+            }
+            else
+            {
+                GameManager.instance.Pop(transform.localPosition);
             }
 
             ReleaseToPool();

@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject _effect;
     [SerializeField]
+    private GameObject _pop;
+    [SerializeField]
     private GameObject _gameover;
 
     [SerializeField]
@@ -88,12 +90,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GetDamage()
+    public void GetDamage(int dmg)
     {
         StopCoroutine("HitAlphaAnimation");
         StartCoroutine("HitAlphaAnimation");
 
-        _hpSlider.value -= 10;
+        _hpSlider.value -= dmg;
 
         if (_hpSlider.value < 0)
         {
@@ -121,10 +123,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void PopEffect(Vector3 position)
+    public void Effect(Vector3 position)
     {
         _effect.transform.position = position;
         _effect.SetActive(true);
+    }
+
+    public void Pop(Vector3 position)
+    {
+        _pop.transform.position = position;
+        _pop.SetActive(true);
     }
 
     private IEnumerator HitAlphaAnimation()

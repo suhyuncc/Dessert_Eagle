@@ -5,25 +5,22 @@ using UnityEngine;
 
 public class SpitProjectile : MonoBehaviour
 {
-    [SerializeField] private float projectileSpeed;
-    [SerializeField] private float projectileLifetime;
-
-    private Vector2 dir;
+    [SerializeField] 
+    private float projectileSpeed;
+    [SerializeField] 
+    private float projectileLifetime;
+    [SerializeField]
+    private AudioSource audio;
 
     private void Start()
     {
-        Transform eagleTransform = GameObject.FindGameObjectWithTag("Bird").transform;
-        
-        dir = eagleTransform.position - transform.position;
-        // float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        // transform.rotation = Quaternion.Euler(0, 0, rotZ);
-        
+        audio.Play();
         Destroy(this.gameObject, projectileLifetime);
     }
 
     private void FixedUpdate()
     {
-        this.transform.Translate(dir.normalized * projectileSpeed * Time.fixedDeltaTime);
+        this.transform.Translate(new Vector2(-1.0f,-2.0f) * projectileSpeed * Time.fixedDeltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -31,7 +28,7 @@ public class SpitProjectile : MonoBehaviour
         if (collision.gameObject.CompareTag("Bird"))
         {
             // 체력 감소 처리 위치
-            
+            GameManager.instance.GetDamage(5);
             Destroy(this.gameObject);
         }
     }

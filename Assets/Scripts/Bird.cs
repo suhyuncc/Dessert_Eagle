@@ -89,7 +89,7 @@ public class Bird : MonoBehaviour
 
             case "Ground":
                 _change_head();
-                GameManager.instance.GetDamage();
+                GameManager.instance.GetDamage(10);
                 break;
         }
 

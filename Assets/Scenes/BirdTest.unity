@@ -2645,8 +2645,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a163923e912892f4ba255344502e7f22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Iscrictic: 0
   _speed: 60
   _angle: 0
+  _cricTime: 0
   _upCollider: {fileID: 1146815984}
   _downCollider: {fileID: 1146815983}
 --- !u!50 &1146815982
@@ -3061,6 +3063,8 @@ MonoBehaviour:
   _hpSlider: {fileID: 1600066073}
   _pointTXT: {fileID: 1962975751}
   _eagle: {fileID: 1146815974}
+  _effect: {fileID: 0}
+  _gameover: {fileID: 0}
   _point: 0
   Stageinfoes:
   - Eagle_speed: 45

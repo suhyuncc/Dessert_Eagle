@@ -23,6 +23,7 @@ public class Fly : PooledObject
     {
         if (collision.transform.CompareTag("Bird"))
         {
+            GameManager.instance.Pop(transform.localPosition);
             ReleaseToPool();
             GameManager.instance.GetHealth(increasing_hp);
         }

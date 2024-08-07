@@ -24,7 +24,6 @@ public class Spitter : MonoBehaviour
     private void Spitting()
     {
         GameObject projectile = Instantiate(spitProjectile, 
-            this.transform.position,
-            this.transform.rotation);
+            this.transform.position, Quaternion.Euler(0f,0f,-90f));
     }
 }

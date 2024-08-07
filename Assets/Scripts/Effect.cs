@@ -5,14 +5,17 @@ using UnityEngine;
 public class Effect : MonoBehaviour
 {
     private SpriteRenderer sprite;
+    private AudioSource audio;
 
     private void Awake()
     {
         sprite = this.GetComponent<SpriteRenderer>();
+        audio = this.GetComponent<AudioSource>();
     }
 
     private void OnEnable()
     {
+        audio.Play();
         StartCoroutine("PadeOut");
     }
 
