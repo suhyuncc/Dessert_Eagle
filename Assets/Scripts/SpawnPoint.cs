@@ -11,6 +11,7 @@ public class SpawnPoint : MonoBehaviour
 
     void Update()
     {
+        _spawnRate = GameManager.instance.Bug_SpawnRate;
 
         if (_spawncheck)
         {

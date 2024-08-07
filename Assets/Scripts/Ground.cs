@@ -18,7 +18,9 @@ public class Ground : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.localPosition += Vector3.left * speed;
+        speed = GameManager.instance.Earth_speed;
+
+        transform.localPosition += Vector3.left * speed * Time.deltaTime;
 
         if(transform.position.x < -153)
         {
