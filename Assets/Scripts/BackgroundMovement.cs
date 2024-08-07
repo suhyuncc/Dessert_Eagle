@@ -20,7 +20,7 @@ public class BackgroundMovement : MonoBehaviour
 
         if (this.transform.position.x < -153)
         {
-            this.transform.position = new Vector3(300f, 0f, 0f);
+            this.transform.position = new Vector3(295f, 0f, 0.0f);
         }
 
         this.transform.Translate(Vector3.left * speed * Time.deltaTime);

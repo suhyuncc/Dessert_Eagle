@@ -25,8 +25,14 @@ public class Earthworm : PooledObject
     {
         if (collision.transform.CompareTag("Bird"))
         {
+            if (collision.gameObject.GetComponent<Bird>().Iscrictic)
+            {
+                GameManager.instance.PopEffect(transform.localPosition);
+            }
+
             ReleaseToPool();
             GameManager.instance.GetHealth(increasing_hp);
+            
         }
     }
 }

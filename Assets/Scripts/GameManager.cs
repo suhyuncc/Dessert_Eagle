@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI _pointTXT;
     [SerializeField]
     private GameObject _eagle;
+    [SerializeField]
+    private GameObject _effect;
+    [SerializeField]
+    private GameObject _gameover;
 
     [SerializeField]
     private float _point;
@@ -76,6 +80,12 @@ public class GameManager : MonoBehaviour
             _currentStage++;
             StageSetting(_currentStage);
         }
+
+        //게임종료시 게임오버 패널 켜기
+        if(_hpSlider.value == 0)
+        {
+            _gameover.SetActive(true);
+        }
     }
 
     public void GetDamage()
@@ -93,12 +103,28 @@ public class GameManager : MonoBehaviour
 
     public void GetHealth(int hp)
     {
-        _hpSlider.value += hp;
+        if (_eagle.GetComponent<Bird>().Iscrictic)
+        {
+            _hpSlider.value += 2* hp;
+            Debug.Log("크리티컬!!");
+            _eagle.GetComponent<Bird>().Iscrictic = false;
+        }
+        else
+        {
+            _hpSlider.value += hp;
+        }
+        
 
         if(_hpSlider.value > 100)
         {
             _hpSlider.value = 100;
         }
+    }
+
+    public void PopEffect(Vector3 position)
+    {
+        _effect.transform.position = position;
+        _effect.SetActive(true);
     }
 
     private IEnumerator HitAlphaAnimation()
